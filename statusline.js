@@ -106,8 +106,19 @@ process.stdin.on("end", () => {
   const badge = `${c.badge} USAGE ${c.reset}`;
   const usageLine = `${badge} ${parts.join(`  ${c.gray}|${c.reset}  `)}`;
 
-  const mascotTop = `${c.claude}╭◕‿-╮${c.reset}`;
-  const mascotBottom = `${c.claude}╰───╯${c.reset}`;
+  const MASCOTS = [
+    { top: "╭−‿−╮", bottom: "╰───╯" }, // sleepy
+    { top: "╭O‿O╮", bottom: "╰───╯" }, // surprised
+    { top: "✦◕‿◕✦", bottom: "╰───╯" }, // sparkle
+    { top: "(◕ᴥ◕)", bottom: "╰─┬─╯" }, // ears
+    { top: "╭✧‿✧╮", bottom: "╰───╯" }, // starry
+    { top: "╭■‿■╮", bottom: "╰───╯" }, // sunglasses
+    { top: "╭◕‿◕╮", bottom: "╰───╯" }, // peeking
+    { top: " ✳‿✳ ", bottom: "╰───╯" }, // asterisk
+  ];
+  const mascot = MASCOTS[Math.floor(Date.now() / 10000) % MASCOTS.length];
+  const mascotTop = `${c.claude}${mascot.top}${c.reset}`;
+  const mascotBottom = `${c.claude}${mascot.bottom}${c.reset}`;
 
   const lines = [`${mascotTop}  ${modelLine}`, `${mascotBottom}  ${usageLine}`].filter(
     (l) => l.replace(/\x1b\[[0-9;]*m/g, "").trim().length > 0
