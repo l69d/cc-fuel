@@ -98,5 +98,5 @@ process.stdin.on("end", () => {
   const badge = `${c.badge} USAGE ${c.reset}`;
   const usageLine = `${badge} ${parts.join(`  ${c.gray}|${c.reset}  `)}`;
   const lines = [modelLine, usageLine].filter(Boolean);
-  process.stdout.write(lines.join("\n"));
+  process.stdout.write(lines.join("\n\n"));
 });
