@@ -111,11 +111,15 @@ process.stdin.on("end", () => {
       : `${c.dim}Effort :${c.reset} ${c.claude}${cap(effort)}${c.reset}`
     : "";
   const ultracodePart = ultracodeOn ? `${c.purple}ULTRACODE${c.reset}` : "";
-  const modelLine = [`${c.claude}✳${c.reset}`, modelPart, effortPart, ultracodePart]
-    .filter(Boolean)
-    .join("   ");
+  const modelLine = [modelPart, effortPart, ultracodePart].filter(Boolean).join("   ");
   const badge = `${c.badge} USAGE ${c.reset}`;
   const usageLine = `${badge} ${parts.join(`  ${c.gray}|${c.reset}  `)}`;
-  const lines = [modelLine, usageLine].filter(Boolean);
-  process.stdout.write(lines.join("\n\n"));
+
+  const mascotTop = `${c.claude}╭◕‿-╮${c.reset}`;
+  const mascotBottom = `${c.claude}╰───╯${c.reset}`;
+
+  const lines = [`${mascotTop}  ${modelLine}`, `${mascotBottom}  ${usageLine}`].filter(
+    (l) => l.replace(/\x1b\[[0-9;]*m/g, "").trim().length > 0
+  );
+  process.stdout.write(lines.join("\n"));
 });
