@@ -73,13 +73,13 @@ process.stdin.on("end", () => {
   if (fivePct !== null) {
     const pc = levelColor(fivePct);
     parts.push(
-      `${c.dim}session${c.reset} ${bar(fivePct)} ${pc}${c.bold}${fivePct}%${c.reset} ${c.dim}(${resetInDuration(five.resets_at)})${c.reset}`
+      `${c.dim}current session${c.reset} ${bar(fivePct)} ${pc}${c.bold}${fivePct}%${c.reset} ${c.dim}(${resetInDuration(five.resets_at)})${c.reset}`
     );
   }
   if (weekPct !== null) {
     const pc = levelColor(weekPct);
     parts.push(
-      `${c.dim}week${c.reset} ${bar(weekPct)} ${pc}${c.bold}${weekPct}%${c.reset} ${c.dim}(${resetAtClock(week.resets_at)})${c.reset}`
+      `${c.dim}week [All Models]${c.reset} ${bar(weekPct)} ${pc}${c.bold}${weekPct}%${c.reset} ${c.dim}(${resetAtClock(week.resets_at)})${c.reset}`
     );
   }
   if (fivePct === null && weekPct === null) {
