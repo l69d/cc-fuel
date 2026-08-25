@@ -7,7 +7,7 @@ A statusline for [Claude Code](https://claude.com/claude-code) that shows how mu
 ╰───╯   USAGE  current session █████░░░░░ 45% (2 hr 5 min)  |  week [All Models] ████░░░░░░ 35% (Resets Sat 2:58 PM)
 ```
 
-Bars go green → yellow → red as you approach the limit. `MAX` and `ULTRACODE` are selectable `/effort` levels and get their own highlight colors, read directly from `effort.level` in the statusLine payload.
+Bars go green → yellow → red as you approach the limit. `MAX` and `ULTRACODE` are selectable `/effort` levels and get their own highlight colors, read directly from `effort.level` in the statusLine payload. The little mascot face cycles between 8 expressions every 10 seconds.
 
 ## Requirements
 
