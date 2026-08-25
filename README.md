@@ -7,7 +7,7 @@ A statusline for [Claude Code](https://claude.com/claude-code) that shows how mu
 ╰───╯   USAGE  current session █████░░░░░ 45% (2 hr 5 min)  |  week [All Models] ████░░░░░░ 35% (Resets Sat 2:58 PM)
 ```
 
-Bars go green → yellow → red as you approach the limit. `MAX` effort gets its own badge; `ULTRACODE` shows in purple when `enableWorkflows` is on in your `settings.json` — note this is a proxy (workflows enabled), not a true per-session read of ultracode state, since Claude Code doesn't expose that to statusline scripts.
+Bars go green → yellow → red as you approach the limit. `MAX` and `ULTRACODE` are selectable `/effort` levels and get their own highlight colors, read directly from `effort.level` in the statusLine payload.
 
 ## Requirements
 
