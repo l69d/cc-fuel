@@ -88,6 +88,7 @@ process.stdin.on("end", () => {
 
   const modelLine = model ? `${c.cyan}${c.bold}${model}${c.reset}` : "";
   const badge = `${c.badge} USAGE ${c.reset}`;
-  const lines = [modelLine, badge, parts.join(`  ${c.gray}|${c.reset}  `)].filter(Boolean);
+  const usageLine = `${badge} ${parts.join(`  ${c.gray}|${c.reset}  `)}`;
+  const lines = [modelLine, usageLine].filter(Boolean);
   process.stdout.write(lines.join("\n"));
 });
