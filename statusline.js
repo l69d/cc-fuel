@@ -29,15 +29,27 @@ process.stdin.on("end", () => {
     return `${color}${"█".repeat(filled)}${c.gray}${"░".repeat(width - filled)}${c.reset}`;
   };
 
-  const resetIn = (t) => {
+  const toDate = (t) => (typeof t === "number" ? new Date(t * 1000) : new Date(t));
+
+  const resetInDuration = (t) => {
     if (!t) return "";
-    const ms = (typeof t === "number" ? t * 1000 : new Date(t).getTime()) - Date.now();
+    const ms = toDate(t).getTime() - Date.now();
     if (ms <= 0) return "resetting";
-    const d = Math.floor(ms / 86400000);
-    const h = Math.floor((ms % 86400000) / 3600000);
+    const h = Math.floor(ms / 3600000);
     const m = Math.floor((ms % 3600000) / 60000);
-    if (d > 0) return `${d}d${h}h`;
-    return h > 0 ? `${h}h${m}m` : `${m}m`;
+    return h > 0 ? `${h} hr ${m} min` : `${m} min`;
+  };
+
+  const resetAtClock = (t) => {
+    if (!t) return "";
+    const date = toDate(t);
+    if (date.getTime() - Date.now() <= 0) return "resetting";
+    const day = date.toLocaleDateString(undefined, { weekday: "short" });
+    const time = date.toLocaleTimeString(undefined, {
+      hour: "numeric",
+      minute: "2-digit",
+    });
+    return `Resets ${day} ${time}`;
   };
 
   const parts = [];
@@ -61,13 +73,13 @@ process.stdin.on("end", () => {
   if (fivePct !== null) {
     const pc = levelColor(fivePct);
     parts.push(
-      `${c.dim}session${c.reset} ${bar(fivePct)} ${pc}${c.bold}${fivePct}%${c.reset} ${c.dim}(${resetIn(five.resets_at)})${c.reset}`
+      `${c.dim}session${c.reset} ${bar(fivePct)} ${pc}${c.bold}${fivePct}%${c.reset} ${c.dim}(${resetInDuration(five.resets_at)})${c.reset}`
     );
   }
   if (weekPct !== null) {
     const pc = levelColor(weekPct);
     parts.push(
-      `${c.dim}week${c.reset} ${bar(weekPct)} ${pc}${c.bold}${weekPct}%${c.reset} ${c.dim}(${resetIn(week.resets_at)})${c.reset}`
+      `${c.dim}week${c.reset} ${bar(weekPct)} ${pc}${c.bold}${weekPct}%${c.reset} ${c.dim}(${resetAtClock(week.resets_at)})${c.reset}`
     );
   }
   if (fivePct === null && weekPct === null) {
