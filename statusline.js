@@ -20,6 +20,7 @@ process.stdin.on("end", () => {
     yellow: "\x1b[1;33m",
     red: "\x1b[1;31m",
     gray: "\x1b[38;5;240m",
+    badge: "\x1b[1;30;46m",
   };
   const levelColor = (pct) => (pct < 60 ? c.green : pct < 85 ? c.yellow : c.red);
 
@@ -86,5 +87,6 @@ process.stdin.on("end", () => {
     parts.push(`${c.dim}rate limits unavailable (restart Claude Code, or not on Pro/Max)${c.reset}`);
   }
 
-  process.stdout.write(parts.join(`  ${c.gray}|${c.reset}  `));
+  const badge = `${c.badge} USAGE ${c.reset}`;
+  process.stdout.write(`${badge}\n${parts.join(`  ${c.gray}|${c.reset}  `)}`);
 });
