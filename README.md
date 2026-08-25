@@ -3,7 +3,7 @@
 A statusline for [Claude Code](https://claude.com/claude-code) that shows how much of your **5-hour session limit** and **weekly limit** you've burned — right in the terminal, always visible, no extra command to run.
 
 ```
-Sonnet 5  |  session ██░░░░░░░░ 20%  (2h23m)  |  week ███████░░░  72%  (3d16h)
+Sonnet 5  |  session ██░░░░░░░░ 20%  (2 hr 23 min)  |  week ███████░░░  72%  (Resets Sat 2:30 PM)
 ```
 
 Bars go green → yellow → red as you approach the limit.
