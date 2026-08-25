@@ -55,7 +55,6 @@ process.stdin.on("end", () => {
 
   const parts = [];
   const model = data.model?.display_name || data.model?.id;
-  if (model) parts.push(`${c.cyan}${c.bold}${model}${c.reset}`);
 
   const rl = data.rate_limits || {};
   const five = rl.five_hour;
@@ -87,6 +86,8 @@ process.stdin.on("end", () => {
     parts.push(`${c.dim}rate limits unavailable (restart Claude Code, or not on Pro/Max)${c.reset}`);
   }
 
+  const modelLine = model ? `${c.cyan}${c.bold}${model}${c.reset}` : "";
   const badge = `${c.badge} USAGE ${c.reset}`;
-  process.stdout.write(`${badge}\n${parts.join(`  ${c.gray}|${c.reset}  `)}`);
+  const lines = [modelLine, badge, parts.join(`  ${c.gray}|${c.reset}  `)].filter(Boolean);
+  process.stdout.write(lines.join("\n"));
 });
