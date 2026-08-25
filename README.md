@@ -3,12 +3,12 @@
 A statusline for [Claude Code](https://claude.com/claude-code) that shows how much of your **5-hour session limit** and **weekly limit** you've burned — right in the terminal, always visible, no extra command to run.
 
 ```
-✳   Current Model : Sonnet 5   Effort : Xhigh
+✳   Current Model : Sonnet 5   Effort : Xhigh   ULTRACODE
 
  USAGE  current session █████░░░░░ 45% (2 hr 5 min)  |  week [All Models] ████░░░░░░ 35% (Resets Sat 2:58 PM)
 ```
 
-Bars go green → yellow → red as you approach the limit.
+Bars go green → yellow → red as you approach the limit. `MAX` effort gets its own badge; `ULTRACODE` shows in purple when `enableWorkflows` is on in your `settings.json` — note this is a proxy (workflows enabled), not a true per-session read of ultracode state, since Claude Code doesn't expose that to statusline scripts.
 
 ## Requirements
 
