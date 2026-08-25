@@ -21,6 +21,8 @@ process.stdin.on("end", () => {
     red: "\x1b[1;31m",
     gray: "\x1b[38;5;240m",
     badge: "\x1b[1;30;46m",
+    claude: "\x1b[1;38;5;173m", // Anthropic brand coral (#D97757)
+    maxBadge: "\x1b[1;97;45m", // bold white on magenta, distinct from level colors
   };
   const levelColor = (pct) => (pct < 60 ? c.green : pct < 85 ? c.yellow : c.red);
 
@@ -89,12 +91,16 @@ process.stdin.on("end", () => {
 
   const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
   const modelPart = model
-    ? `${c.dim}Current Model :${c.reset} ${c.cyan}${c.bold}${model}${c.reset}`
+    ? `${c.dim}Current Model :${c.reset} ${c.claude}${model}${c.reset}`
     : "";
   const effortPart = effort
-    ? `${c.dim}Effort :${c.reset} ${c.cyan}${c.bold}${cap(effort)}${c.reset}`
+    ? effort === "max"
+      ? `${c.dim}Effort :${c.reset} ${c.maxBadge} MAX ${c.reset}`
+      : `${c.dim}Effort :${c.reset} ${c.claude}${cap(effort)}${c.reset}`
     : "";
-  const modelLine = [modelPart, effortPart].filter(Boolean).join("   ");
+  const modelLine = [`${c.claude}✳${c.reset}`, modelPart, effortPart]
+    .filter(Boolean)
+    .join("   ");
   const badge = `${c.badge} USAGE ${c.reset}`;
   const usageLine = `${badge} ${parts.join(`  ${c.gray}|${c.reset}  `)}`;
   const lines = [modelLine, usageLine].filter(Boolean);
