@@ -23,7 +23,19 @@ process.stdin.on("end", () => {
     badge: "\x1b[1;30;46m",
     claude: "\x1b[1;38;5;173m", // Anthropic brand coral (#D97757)
     maxBadge: "\x1b[1;97;45m", // bold white on magenta, distinct from level colors
+    purple: "\x1b[1;35m",
   };
+
+  const ultracodeOn = (() => {
+    try {
+      const settings = JSON.parse(
+        require("fs").readFileSync(require("os").homedir() + "/.claude/settings.json", "utf8")
+      );
+      return settings.enableWorkflows === true;
+    } catch {
+      return false;
+    }
+  })();
   const levelColor = (pct) => (pct < 60 ? c.green : pct < 85 ? c.yellow : c.red);
 
   const bar = (pct, width = 10) => {
@@ -98,7 +110,8 @@ process.stdin.on("end", () => {
       ? `${c.dim}Effort :${c.reset} ${c.maxBadge} MAX ${c.reset}`
       : `${c.dim}Effort :${c.reset} ${c.claude}${cap(effort)}${c.reset}`
     : "";
-  const modelLine = [`${c.claude}✳${c.reset}`, modelPart, effortPart]
+  const ultracodePart = ultracodeOn ? `${c.purple}ULTRACODE${c.reset}` : "";
+  const modelLine = [`${c.claude}✳${c.reset}`, modelPart, effortPart, ultracodePart]
     .filter(Boolean)
     .join("   ");
   const badge = `${c.badge} USAGE ${c.reset}`;
