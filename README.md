@@ -3,11 +3,11 @@
 A statusline for [Claude Code](https://claude.com/claude-code) that shows how much of your **5-hour session limit** and **weekly limit** you've burned — right in the terminal, always visible, no extra command to run.
 
 ```
-╭◕‿-╮  Current Model : Sonnet 5   Effort : Xhigh   ULTRACODE
+╭◕‿-╮  Current Model : Opus 5.5   Effort :  ULTRACODE 
 ╰───╯   USAGE  current session █████░░░░░ 45% (2 hr 5 min)  |  week [All Models] ████░░░░░░ 35% (Resets Sat 2:58 PM)
 ```
 
-Bars go green → yellow → red as you approach the limit. `MAX` and `ULTRACODE` are selectable `/effort` levels and get their own highlight colors, read directly from `effort.level` in the statusLine payload. The little mascot face cycles between 8 expressions every 10 seconds.
+Bars go green → yellow → red as you approach the limit. `MAX` and `ULTRACODE` get their own badges. Ultracode runs at `xhigh`, so the payload's `effort.level` can't tell them apart; when it's `xhigh`, cc-fuel checks the session transcript for the latest `/effort` or `/model` effort change (or ultracode on/off reminder). Claude Code doesn't re-run the statusline when you switch between `xhigh` and ultracode, so the badge catches up after the next reply; toggles that leave no transcript record (Remote Control, `--resume`) show after your next prompt. The little mascot face cycles between 8 expressions every 10 seconds.
 
 ## Requirements
 
@@ -27,7 +27,7 @@ Then restart Claude Code (quit and relaunch — a running session won't pick up 
 
 ## How it works
 
-Claude Code invokes your configured `statusLine` command on every prompt, piping a JSON payload on stdin that includes `rate_limits.five_hour` and `rate_limits.seven_day` (each with `used_percentage` and `resets_at`) for Pro/Max accounts. `statusline.js` reads that JSON and renders it as two progress bars. No network calls, no reading your credentials file, no polling — it only uses what Claude Code already gives it.
+Claude Code invokes your configured `statusLine` command on every prompt, piping a JSON payload on stdin that includes `rate_limits.five_hour` and `rate_limits.seven_day` (each with `used_percentage` and `resets_at`) for Pro/Max accounts. `statusline.js` reads that JSON and renders it as two progress bars. No network calls, no reading your credentials file, no polling — the only file it opens is the session transcript Claude Code points it at, and only at `xhigh` effort.
 
 ## Uninstall
 
