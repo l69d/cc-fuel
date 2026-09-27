@@ -23,7 +23,7 @@ process.stdin.on("end", () => {
     badge: "\x1b[1;30;46m",
     claude: "\x1b[1;38;5;173m", // Anthropic brand coral (#D97757)
     maxBadge: "\x1b[1;97;45m", // bold white on magenta, distinct from level colors
-    purple: "\x1b[1;35m",
+    ultraBadge: "\x1b[1;97;48;5;93m", // bold white on violet, one step past MAX
   };
 
   const levelColor = (pct) => (pct < 60 ? c.green : pct < 85 ? c.yellow : c.red);
@@ -95,11 +95,44 @@ process.stdin.on("end", () => {
   const modelPart = model
     ? `${c.dim}Current Model :${c.reset} ${c.claude}${model}${c.reset}`
     : "";
+  // Ultracode reports effort.level "xhigh"; whether it's on only shows in the transcript,
+  // so compare the last on-marker against the last off-marker there.
+  // ponytail: reads the whole transcript (~20ms per 30MB, xhigh only); read a tail chunk if that bites.
+  const ultracodeOn = (path) => {
+    let b;
+    try {
+      b = require("fs").readFileSync(path);
+    } catch {
+      return false;
+    }
+    const at = (s) => b.lastIndexOf(s);
+    const out = '"content":"<local-command-stdout>';
+    const set = at(out + "Set effort level to ");
+    const ultraSet = at(out + "Set effort level to ultracode");
+    // /model can pick effort too: "Set model to X ... with `xhigh` effort" (level may be ANSI-bold instead).
+    const model = at(out + "Set model to ");
+    const pick =
+      model === -1
+        ? null
+        : / with (\S+) effort/.exec(b.toString("utf8", model, b.indexOf("</local-command-stdout>", model)));
+    const pickUltra = pick !== null && pick[1].includes("ultracode");
+    const on = Math.max(at('"attachment":{"type":"ultra_effort_enter"'), ultraSet, pickUltra ? model : -1);
+    const off = Math.max(
+      at('"attachment":{"type":"ultra_effort_exit"'),
+      set === ultraSet ? -1 : set,
+      pick !== null && !pickUltra ? model : -1,
+      // "Effort level set to auto", "Effort 'max' exceeds the cap...", CLAUDE_CODE_EFFORT_LEVEL override replies
+      ...["Effort ", "Cleared effort", "Not applied: ", "CLAUDE_CODE_EFFORT_LEVEL="].map((m) => at(out + m))
+    );
+    return on > off;
+  };
+  const ultracode = effort === "xhigh" && ultracodeOn(data.transcript_path);
+
   const effortPart = effort
-    ? effort === "max"
+    ? ultracode
+      ? `${c.dim}Effort :${c.reset} ${c.ultraBadge} ULTRACODE ${c.reset}`
+      : effort === "max"
       ? `${c.dim}Effort :${c.reset} ${c.maxBadge} MAX ${c.reset}`
-      : effort === "ultracode"
-      ? `${c.dim}Effort :${c.reset} ${c.purple}${c.bold}ULTRACODE${c.reset}`
       : `${c.dim}Effort :${c.reset} ${c.claude}${cap(effort)}${c.reset}`
     : "";
   const modelLine = [modelPart, effortPart].filter(Boolean).join("   ");
